@@ -4,27 +4,32 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject player;
-    public float offset;
-    private Vector3 playerPosition;
-    public float offsetSmoothing;
+    private Transform cameraFollow;
+
+    public float leftLimit;
+    public float RightLimit;
+    public float UpperLimit;
+    public float lowerLimit;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        cameraFollow = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerPosition = new Vector3 (player.transform.position.x, transform.position.y, transform.position.z);
-        if(player.transform.localScale.x > 0f){
-            playerPosition = new Vector3 (playerPosition.x + offset, playerPosition.y, playerPosition.z);
-        }
-        else{
-            playerPosition = new Vector3 (playerPosition.x - offset, playerPosition.y, playerPosition.z);
-        }
-        transform.position = Vector3.Lerp (transform.position, playerPosition, offsetSmoothing * Time.deltaTime);
+        Vector3 temp = transform.position;
+        temp.x = cameraFollow.position.x + 3f;
+        temp.y = cameraFollow.position.y + 3f;
+        transform.position = temp;
+
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, leftLimit, RightLimit),
+            Mathf.Clamp(transform.position.y, UpperLimit, lowerLimit),
+            transform.position.z
+            );
+
     }
 }
